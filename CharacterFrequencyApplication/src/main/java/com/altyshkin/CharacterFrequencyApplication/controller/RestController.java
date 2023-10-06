@@ -1,5 +1,7 @@
 package com.altyshkin.CharacterFrequencyApplication.controller;
 
+import com.altyshkin.CharacterFrequencyApplication.exception.HandleMaxException;
+import com.altyshkin.CharacterFrequencyApplication.exception.HandleMinException;
 import com.altyshkin.CharacterFrequencyApplication.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,12 @@ public class RestController {
     @GetMapping("/character-frequency")
     public ResponseEntity<Map<Character, Integer>> getCharacterFrequency(
             @RequestParam @NonNull String inputString
-    ) throws NotFoundException {
+    ) throws NotFoundException, HandleMinException, HandleMaxException {
         if (inputString.length() > 12) {
-            throw new NotFoundException();
+            throw new HandleMaxException();
+        }
+        if (inputString.length() < 1) {
+            throw new HandleMinException();
         }
         // Вычисление частоты встречи символов
         Map<Character, Integer> frequencyMap = new HashMap<>();
